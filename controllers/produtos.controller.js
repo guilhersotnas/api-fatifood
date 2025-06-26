@@ -4,7 +4,7 @@ exports.criar = async (req, res) => {
   try {
     const novo = new Produto({
       ...req.body,
-      imagem: req.file?.filename
+      imagem: req.body.imagem
     });
     await novo.save();
     res.status(201).json(novo);
@@ -14,6 +14,10 @@ exports.criar = async (req, res) => {
 };
 
 exports.listar = async (req, res) => {
-  const produtos = await Produto.find().sort({ data: -1 });
-  res.json(produtos);
+  try {
+    const produtos = await Produto.find().sort({ data: -1 });
+    res.json(produtos);
+  } catch (error) {
+    res.status(500).json({ erro: error.message });
+  }
 };
